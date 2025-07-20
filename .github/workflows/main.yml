@@ -14,17 +14,17 @@ jobs:
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
-          distribution: 'temurin'
+          distribution: temurin
           java-version: 17
 
-      - name: Grant execute permission for gradlew
+      - name: Make gradlew executable
         run: chmod +x ./gradlew
 
       - name: Build APK
         run: ./gradlew assembleRelease
 
       - name: Upload APK artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: WhisperInput-APK
           path: app/build/outputs/apk/release/app-release.apk
