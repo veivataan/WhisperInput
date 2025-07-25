@@ -56,29 +56,29 @@ android {
     if (signingPropertiesExist) signingProperties.load(new FileInputStream(signingPropertiesFile))
 
     signingConfigs {
-        release {
-            storeFile signingPropertiesExist ? file(signingProperties["signingStoreLocation"]) : null
-            storePassword signingProperties["signingStorePassword"]
-            keyAlias signingProperties["signingKeyAlias"]
-            keyPassword signingProperties["signingKeyPassword"]
+    release {
+        // Prevent crash by checking if signing info is defined
+        if (project.hasProperty("signing")) {
+            storeFile file(signing.store)
+            storePassword signing.storePassword
+            keyAlias signing.keyAlias
+            keyPassword signing.keyPassword
         }
     }
+}
 
     buildTypes {
-        debug {
-            debuggable true
-            jniDebuggable false
-            signingConfig signingConfigs.release
-        }
-        release {
-            debuggable false
-            minifyEnabled true
-            shrinkResources true
-            proguardFile getDefaultProguardFile('proguard-android-optimize.txt')
-            proguardFile 'proguard.cfg'
-            signingConfig signingConfigs.release
-        }
+    debug {
+        // Do NOT reference signingConfigs.release here
+        // Just leave as default
     }
+    release {
+        // Optional: comment out release signing config if unused
+        // signingConfig signingConfigs.release
+        minifyEnabled false
+        proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+    }
+}
 
     ndkVersion "25.1.8937393"
     externalNativeBuild {
